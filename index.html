@@ -40,10 +40,10 @@
             <li>Health Data Analytics</li>
           </ul>
           <ul class="stats">
-            <li><strong data-count="6">6</strong><span>first-author research posters</span></li>
-            <li><strong data-count="4">4</strong><span>peer-reviewed publications</span></li>
-            <li><strong data-count="4">4</strong><span>APHA 2026 abstract-review programs</span></li>
-            <li><strong data-count="4.0">4.0</strong><span>MSPH GPA</span></li>
+            <li><strong>6</strong><span>first-author research posters</span></li>
+            <li><strong>4</strong><span>peer-reviewed publications</span></li>
+            <li><strong>4</strong><span>APHA 2026 abstract-review programs</span></li>
+            <li><strong>4.0</strong><span>MSPH GPA</span></li>
           </ul>
           <div class="buttons">
             <a class="btn gold" href="#research">See my research ↓</a>
@@ -708,21 +708,8 @@
     <div class="wrap">© 2026 Ifeoluwanimi Praise Shobayo</div>
   </footer>
   <script>
-    // Counts the hero numbers up once on load and marks the section in view in the navigation.
+    // Marks the section in view in the navigation.
     (function () {
-      var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (!still) {
-        document.querySelectorAll('[data-count]').forEach(function (el) {
-          var end = parseFloat(el.dataset.count), dec = (el.dataset.count.split('.')[1] || '').length, t0 = null;
-          function step(t) {
-            if (t0 === null) t0 = t;
-            var p = Math.min(1, (t - t0) / 900), v = end * (1 - Math.pow(1 - p, 3));
-            el.textContent = v.toFixed(dec);
-            if (p < 1) requestAnimationFrame(step);
-          }
-          requestAnimationFrame(step);
-        });
-      }
       var links = {};
       document.querySelectorAll('nav ul a[href^="#"]').forEach(function (a) { links[a.getAttribute('href').slice(1)] = a; });
       if (!('IntersectionObserver' in window)) return;
