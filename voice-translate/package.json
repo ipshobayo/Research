@@ -1,0 +1,7 @@
+{
+  "name": "voice-translate",
+  "version": "1.0.0",
+  "description": "Live conversation transcription + translation with optional audio recording",
+  "scripts": { "start": "node server.js", "test": "node test.js" },
+  "engines": { "node": ">=18" }
+}

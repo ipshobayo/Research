@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Voice Translate</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>🎙️ Voice Translate</h1>
+  <div class="langs">
+    <label>Speaking <select id="from"></select></label>
+    <button id="swap" title="Swap languages" aria-label="Swap languages">⇄</button>
+    <label>Translate to <select id="to"></select></label>
+  </div>
+</header>
+
+<section class="controls">
+  <button id="start" class="primary">Start listening</button>
+  <button id="stop" disabled>Stop</button>
+  <button id="saveAudio" disabled>Save audio now</button>
+  <label class="chk"><input type="checkbox" id="speak"> Read translations aloud</label>
+  <label class="chk"><input type="checkbox" id="swapSpeaker" checked> Label speakers (tap a line's badge to switch)</label>
+  <span id="status" role="status"></span>
+</section>
+
+<div id="unsupported" hidden>Live speech recognition isn't available in this browser. Please use Chrome, Edge or Safari.</div>
+
+<main>
+  <div id="empty">Press <b>Start listening</b> and begin talking. Each sentence appears with its translation.</div>
+  <ul id="log"></ul>
+  <div id="interim"></div>
+</main>
+
+<footer>
+  <button id="exportTxt">Export transcript (.txt)</button>
+  <button id="exportSrt">Subtitles (.srt)</button>
+  <button id="exportJson">JSON</button>
+  <button id="clear">Clear</button>
+</footer>
+
+<dialog id="audioDialog">
+  <form method="dialog">
+    <h2>Do you want the audio?</h2>
+    <p>The transcript and translation are always saved. Choose what to do with the voice recording:</p>
+    <button value="live" class="primary">Yes — let me save it during the conversation</button>
+    <button value="later">Keep it, I'll decide later</button>
+    <button value="none">No audio, transcript only</button>
+  </form>
+</dialog>
+
+<dialog id="endDialog">
+  <form method="dialog">
+    <h2>Conversation ended</h2>
+    <p id="endInfo"></p>
+    <button value="save" class="primary">Download audio</button>
+    <button value="discard">Discard audio</button>
+  </form>
+</dialog>
+
+<script src="app.js"></script>
+</body>
+</html>
