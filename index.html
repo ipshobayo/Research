@@ -9,12 +9,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/style.css">
+  <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
-  <nav>
+  <nav class="has-menu">
     <div class="wrap">
       <a class="brand" href="#top">Ifeoluwanimi <span>Shobayo</span></a>
-      <ul>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu" aria-label="Open menu"><span></span><span></span><span></span></button>
+      <ul id="site-menu">
         <li><a href="#research">Research</a></li>
         <li><a href="#about">About</a></li>
         <li><a href="#projects">Projects</a></li>
@@ -25,6 +27,7 @@
         <li><a href="#contact">Contact</a></li>
       </ul>
     </div>
+    <div class="scroll-progress" aria-hidden="true"></div>
   </nav>
 
   <main id="top">
@@ -33,7 +36,7 @@
         <div>
           <p class="eyebrow">MSPH Epidemiology Candidate · Liberty University · May 2027</p>
           <h1>Ifeoluwanimi Praise Shobayo</h1>
-          <p class="tagline">I turn health data into clear answers that public health teams can act on.</p>
+          <p class="tagline">I turn health data into <em>clear answers</em> that public health teams can act on.</p>
           <ul class="focus-line">
             <li>Epidemiology</li>
             <li>Mental Health</li>
@@ -692,7 +695,13 @@
           <p class="kicker">Contact</p>
           <h2>Let’s connect</h2>
           <p>I’m open to roles in epidemiology, public health data analysis, infection prevention, and research, especially in mental health (including women’s and maternal mental health), disease prevention, healthy aging, and population health.</p>
-          <a class="contact-email" href="mailto:ipshobayo@gmail.com">ipshobayo@gmail.com</a>
+          <div class="email-row">
+            <a class="contact-email" href="mailto:ipshobayo@gmail.com">ipshobayo@gmail.com</a>
+            <button class="copy-email" type="button" data-email="ipshobayo@gmail.com">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>
+              Copy email
+            </button>
+          </div>
         </div>
         <div class="buttons">
           <a class="btn gold" href="connect/Ifeoluwanimi-Shobayo.vcf">Save my contact</a>
@@ -707,7 +716,75 @@
   <footer>
     <div class="wrap">© 2026 Ifeoluwanimi Praise Shobayo</div>
   </footer>
+  <button class="to-top" type="button" aria-label="Back to top"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg></button>
+  <p class="toast" role="status" aria-live="polite"></p>
   <script>
+    // Phone menu, scroll progress, back-to-top button and copy-email button.
+    (function () {
+      var nav = document.querySelector('nav.has-menu');
+      var toggle = nav.querySelector('.nav-toggle');
+      var bar = nav.querySelector('.scroll-progress');
+      var toTop = document.querySelector('.to-top');
+      var toast = document.querySelector('.toast');
+      var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function setMenu(open) {
+        nav.classList.toggle('open', open);
+        toggle.setAttribute('aria-expanded', String(open));
+        toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      }
+      toggle.addEventListener('click', function () { setMenu(!nav.classList.contains('open')); });
+      nav.querySelectorAll('ul a').forEach(function (a) { a.addEventListener('click', function () { setMenu(false); }); });
+      document.addEventListener('click', function (e) { if (!nav.contains(e.target)) setMenu(false); });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && nav.classList.contains('open')) { setMenu(false); toggle.focus(); }
+      });
+
+      function onScroll() {
+        var y = window.scrollY, max = document.documentElement.scrollHeight - window.innerHeight;
+        bar.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, y / max) : 0) + ')';
+        nav.classList.toggle('scrolled', y > 24);
+        toTop.classList.toggle('show', y > 600);
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+      toTop.addEventListener('click', function () {
+        window.scrollTo({ top: 0, behavior: still ? 'auto' : 'smooth' });
+        document.querySelector('nav .brand').focus({ preventScroll: true });
+      });
+
+      var hideToast;
+      function say(msg) {
+        toast.textContent = msg;
+        toast.classList.add('show');
+        clearTimeout(hideToast);
+        hideToast = setTimeout(function () { toast.classList.remove('show'); }, 2400);
+      }
+      document.querySelectorAll('.copy-email').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var email = btn.dataset.email;
+          function fallback() {
+            var field = document.createElement('textarea');
+            field.value = email;
+            field.setAttribute('readonly', '');
+            field.style.position = 'fixed';
+            field.style.opacity = '0';
+            document.body.appendChild(field);
+            field.select();
+            var ok = false;
+            try { ok = document.execCommand('copy'); } catch (err) { ok = false; }
+            field.remove();
+            say(ok ? 'Email copied' : 'Copy this email: ' + email);
+          }
+          if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(email).then(function () { say('Email copied'); }, fallback);
+          } else {
+            fallback();
+          }
+        });
+      });
+    })();
+
     // Marks the section in view in the navigation.
     (function () {
       var links = {};
